@@ -77,14 +77,14 @@ class ABCango:
         self.cwd = cwd
         self.result_queue = queue.Queue()
 
-    def process_stdout(self, line):
+    def process_stdout(self, line: str):
         self.result_queue.put(line)
 
-    def process_stderr(self, line):
+    def process_stderr(self, line: str):
         pass
 
     @property
-    def finished(self):
+    def finished(self) -> bool:
         return self._r.finished()
 
     def run(self):
@@ -93,7 +93,7 @@ class ABCango:
             on_line=self.process_stdout,
             on_err_line=self.process_stderr)
 
-    def genresult(self):
+    def genresult(self) -> Iterator:
         while not self.finished:
             try:
                 if not self.result_queue.empty():
