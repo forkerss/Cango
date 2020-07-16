@@ -16,13 +16,13 @@ You can override the `process_stdout`,`process_stderr` method
 
 ```Python
 # Simple use of Cango
-from Cango import ABCango
+from Cango import Cango
 
 cmd = ["masscan", "--ports", ports, ip_range]
-masscan = ABCango(cmd)
+masscan = Cango(cmd)
 masscan.run()
 print(masscan.finished)
 for item in masscan.genresult():
-    if not item is None:
+    if item:
         print(item)
 ```

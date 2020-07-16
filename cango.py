@@ -69,7 +69,7 @@ def execute_cmd_async(cmd: List,
     return R
 
 
-class ABCango:
+class Cango:
     def __init__(self,
                  cmd: List,
                  cwd: str = None):
@@ -85,7 +85,11 @@ class ABCango:
 
     @property
     def finished(self) -> bool:
-        return self._r.finished()
+        if self._r.finished() is False:
+            return False
+        elif not self.result_queue.empty():
+            return False
+        return True
 
     def run(self):
         self._r = execute_cmd_async(
@@ -93,11 +97,11 @@ class ABCango:
             on_line=self.process_stdout,
             on_err_line=self.process_stderr)
 
-    def genresult(self) -> Iterator:
+    def genresult(self, timeout=1) -> Iterator:
         while not self.finished:
             try:
                 if not self.result_queue.empty():
-                    yield self.result_queue.get(timeout=1)
+                    yield self.result_queue.get(timeout=timeout)
             except queue.Empty:
                 pass
             except KeyboardInterrupt:
